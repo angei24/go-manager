@@ -1,0 +1,6 @@
+# 项目级配置示例（Phase 2 可完整解析）
+go = "1.22.5"
+
+[[tools]]
+package = "golang.org/x/tools/gopls"
+version = "latest"
