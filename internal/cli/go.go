@@ -1,8 +1,13 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
+	"fmt"
+	"os"
+	"path/filepath"
+
 	"github.com/angei24/go-manager/internal/gover"
+	"github.com/angei24/go-manager/internal/mod"
+	"github.com/spf13/cobra"
 )
 
 var goCmd = &cobra.Command{
@@ -31,10 +36,29 @@ var goUseGlobal bool
 
 var goUseCmd = &cobra.Command{
 	Use:   "use <version>",
-	Short: "Set default Go version (project .gm-version or --global)",
+	Short: "Set Go version (.gm-version and go.mod in project)",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return exitErr(gover.Use(args[0], goUseGlobal))
+		display, err := gover.Use(args[0], goUseGlobal)
+		if err != nil {
+			return exitErr(err)
+		}
+		if goUseGlobal {
+			return nil
+		}
+		wd, err := os.Getwd()
+		if err != nil {
+			return exitErr(err)
+		}
+		if _, err := os.Stat(filepath.Join(wd, "go.mod")); err != nil {
+			fmt.Printf("Project Go version set to %s (.gm-version)\n", display)
+			return nil
+		}
+		if err := mod.PinProjectGoVersion(wd, display); err != nil {
+			return exitErr(err)
+		}
+		fmt.Printf("Project Go version set to %s (.gm-version and go.mod)\n", display)
+		return nil
 	},
 }
 

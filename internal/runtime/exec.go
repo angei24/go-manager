@@ -49,7 +49,7 @@ func ExecGo(workDir string, version string, env []string, args ...string) error 
 	cmd.Env = append(os.Environ(), env...)
 	if goroot != "" {
 		cmd.Env = appendEnv(cmd.Env, "GOROOT="+goroot)
-		// prepend GOROOT/bin to PATH
+		cmd.Env = appendEnv(cmd.Env, "GOTOOLCHAIN=local")
 		cmd.Env = prependPath(cmd.Env, filepath.Join(goroot, "bin"))
 	}
 	return cmd.Run()
@@ -66,6 +66,7 @@ func ExecGoCombined(workDir string, version string, args ...string) ([]byte, err
 	env := os.Environ()
 	if goroot != "" {
 		env = appendEnv(env, "GOROOT="+goroot)
+		env = appendEnv(env, "GOTOOLCHAIN=local")
 		env = prependPath(env, filepath.Join(goroot, "bin"))
 	}
 	cmd.Env = env

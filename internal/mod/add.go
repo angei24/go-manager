@@ -32,6 +32,11 @@ func Add(pkg string, upgrade, verbose bool) error {
 	if err := runtime.ExecGo(dir, ver, nil, args...); err != nil {
 		return fmt.Errorf("go get: %w", err)
 	}
+	if ver != "" {
+		if err := PinProjectGoVersion(dir, ver); err != nil {
+			return fmt.Errorf("keep go.mod in sync with .gm-version: %w", err)
+		}
+	}
 	return nil
 }
 

@@ -1,8 +1,8 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/angei24/go-manager/internal/project"
+	"github.com/spf13/cobra"
 )
 
 var (
@@ -21,10 +21,10 @@ var initCmd = &cobra.Command{
 			dir = args[0]
 		}
 		return exitErr(project.Init(project.InitOptions{
-			Dir:    dir,
-			Module: initModule,
-			NoGit:  initNoGit,
-			Force:  initForce,
+			Dir:     dir,
+			Module:  initModule,
+			NoGit:   initNoGit,
+			Force:   initForce,
 			Verbose: verbose,
 		}))
 	},

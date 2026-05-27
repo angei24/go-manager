@@ -6,11 +6,9 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 	"text/template"
 
 	"github.com/angei24/go-manager/internal/config"
-	"github.com/angei24/go-manager/internal/gover"
 	"github.com/angei24/go-manager/internal/mod"
 )
 
@@ -87,15 +85,11 @@ func Init(opts InitOptions) error {
 		return err
 	}
 
-	pinVer := goVer
-	if pinVer == "" {
-		if policy, err := gover.FetchSupportedReleases(); err == nil && len(policy.LatestByMinor) > 0 {
-			pinVer = strings.TrimPrefix(policy.LatestByMinor[0].Version, "go")
-		} else {
-			pinVer = "1.22.0"
-		}
+	pinVer, err := mod.ReadGoModVersion(dir)
+	if err != nil {
+		return fmt.Errorf("sync .gm-version with go.mod: %w", err)
 	}
-	if err := config.WriteProjectVersion(dir, pinVer); err != nil {
+	if err := mod.PinProjectGoVersion(dir, pinVer); err != nil {
 		return err
 	}
 

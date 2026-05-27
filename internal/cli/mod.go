@@ -1,8 +1,8 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
 	gmmod "github.com/angei24/go-manager/internal/mod"
+	"github.com/spf13/cobra"
 )
 
 var addUpgrade bool

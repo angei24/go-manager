@@ -2,6 +2,8 @@
 
 类 [uv](https://github.com/astral-sh/uv) 体验的 Go 项目管理 CLI：多版本 SDK、模块依赖、全局工具。
 
+#### 目前仅作为学习项目,不建议实际使用
+
 ## 安装
 
 ### 一键安装（推荐）
@@ -91,7 +93,7 @@ gm tool list
 | `gm init [dir]` | 创建项目（git、go.mod、main.go、README、.gm-version） |
 | `gm go list` | 已安装版本 + 当前支持安装的最新两个 stable minor（如 1.25.x / 1.26.x 的最新 patch） |
 | `gm go install <ver>` | 下载安装 Go SDK（仅限最近两个 stable minor 内的版本，不含 rc/beta） |
-| `gm go use <ver> [--global]` | 项目 `.gm-version` 或全局默认版本 |
+| `gm go use <ver> [--global]` | 同步更新 `.gm-version` 与 `go.mod` 的 `go`/`toolchain` 行 |
 | `gm go uninstall <ver>` | 卸载已安装版本 |
 | `gm add <pkg>` | `go get` 添加依赖 |
 | `gm remove <pkg>` | `go mod edit -droprequire` |

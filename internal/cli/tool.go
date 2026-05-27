@@ -1,8 +1,8 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/angei24/go-manager/internal/tool"
+	"github.com/spf13/cobra"
 )
 
 var toolCmd = &cobra.Command{
