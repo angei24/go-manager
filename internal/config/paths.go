@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 )
 
 const (
@@ -43,22 +44,29 @@ func VersionsDir() (string, error) {
 	return filepath.Join(data, "versions"), nil
 }
 
-// ToolsBinDir returns GOBIN for gm-managed tools.
-func ToolsBinDir() (string, error) {
-	data, err := DataDir()
-	if err != nil {
-		return "", err
+// GoBinDir returns the Go tools install directory (same as default GOBIN: $GOPATH/bin, usually ~/go/bin).
+func GoBinDir() (string, error) {
+	if v := os.Getenv("GOBIN"); v != "" {
+		return v, nil
 	}
-	return filepath.Join(data, "bin"), nil
+	gopath := os.Getenv("GOPATH")
+	if gopath == "" {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return "", err
+		}
+		gopath = filepath.Join(home, "go")
+	}
+	first := gopath
+	if i := strings.IndexAny(gopath, string(os.PathListSeparator)); i >= 0 {
+		first = gopath[:i]
+	}
+	return filepath.Join(first, "bin"), nil
 }
 
-// ToolsManifestPath returns path to tools.json.
-func ToolsManifestPath() (string, error) {
-	data, err := DataDir()
-	if err != nil {
-		return "", err
-	}
-	return filepath.Join(data, "tools.json"), nil
+// ToolsBinDir is an alias for GoBinDir (official ~/go/bin layout).
+func ToolsBinDir() (string, error) {
+	return GoBinDir()
 }
 
 // VersionsIndexPath returns path to versions.json index.
@@ -87,7 +95,6 @@ func userDataDir() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	// XDG_DATA_HOME or ~/.local/share
 	if xdg := os.Getenv("XDG_DATA_HOME"); xdg != "" {
 		return filepath.Join(xdg, appName), nil
 	}

@@ -2,7 +2,7 @@
 
 类 [uv](https://github.com/astral-sh/uv) 体验的 Go 项目管理 CLI：多版本 SDK、模块依赖、全局工具。
 
-#### 目前仅作为学习项目,不建议实际使用
+#### 目前仅作为学习项目,不推荐实际生产使用
 
 ## 安装
 
@@ -82,7 +82,7 @@ gm remove github.com/spf13/cobra
 
 # 全局工具（类似 pipx / uv tool）
 gm tool install golang.org/x/tools/gopls@latest
-export PATH="$HOME/.local/share/gm/bin:$PATH"
+# 工具安装到 ~/go/bin（与官方 go install 相同，需已在 PATH 中）
 gm tool list
 ```
 
@@ -98,14 +98,14 @@ gm tool list
 | `gm add <pkg>` | `go get` 添加依赖 |
 | `gm remove <pkg>` | `go mod edit -droprequire` |
 | `gm sync [--check]` | `go mod tidy` + `go mod download` |
-| `gm tool list/install/uninstall` | 管理 `~/.local/share/gm/bin` 下的工具 |
+| `gm tool list/install/uninstall` | 管理 `~/go/bin`（或 `GOBIN`/`GOPATH/bin`）下的工具 |
 
 ## 配置与目录
 
 | 路径 | 用途 |
 |------|------|
 | `~/.local/share/gm/versions/` | 已安装的 Go SDK（GOROOT） |
-| `~/.local/share/gm/bin/` | 全局工具 GOBIN |
+| `~/go/bin/` | 全局工具目录（与 `go install` 默认一致，可用 `GOBIN` 覆盖） |
 | `~/.config/gm/config.toml` | 全局默认 Go 版本 |
 | `.gm-version` | 项目锁定 Go 版本 |
 

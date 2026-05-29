@@ -1,6 +1,6 @@
 module github.com/angei24/go-manager
 
-go 1.26
+go 1.26.3
 
 require (
 	github.com/hashicorp/go-version v1.7.0
