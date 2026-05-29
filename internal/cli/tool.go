@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"fmt"
+
 	"github.com/angei24/go-manager/internal/tool"
 	"github.com/spf13/cobra"
 )
@@ -19,20 +21,30 @@ var toolListCmd = &cobra.Command{
 }
 
 var toolInstallCmd = &cobra.Command{
-	Use:   "install <package>[@version]",
-	Short: "Install a Go tool binary",
-	Args:  cobra.ExactArgs(1),
+	Use:   "install <package>[@version] [packages...]",
+	Short: "Install one or more Go tool binaries",
+	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return exitErr(tool.Install(args[0], verbose))
+		for _, pkg := range args {
+			if err := tool.Install(pkg, verbose); err != nil {
+				return exitErr(fmt.Errorf("%s: %w", pkg, err))
+			}
+		}
+		return nil
 	},
 }
 
 var toolUninstallCmd = &cobra.Command{
-	Use:   "uninstall <name>",
-	Short: "Uninstall a Go tool by binary name",
-	Args:  cobra.ExactArgs(1),
+	Use:   "uninstall <name> [names...]",
+	Short: "Uninstall one or more Go tools by binary name",
+	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return exitErr(tool.Uninstall(args[0]))
+		for _, name := range args {
+			if err := tool.Uninstall(name); err != nil {
+				return exitErr(fmt.Errorf("%s: %w", name, err))
+			}
+		}
+		return nil
 	},
 }
 

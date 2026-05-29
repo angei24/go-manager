@@ -92,13 +92,14 @@ gm tool list
 |------|------|
 | `gm init [dir]` | 创建项目（git、go.mod、main.go、README、.gm-version） |
 | `gm go list` | 已安装版本 + 当前支持安装的最新两个 stable minor（如 1.25.x / 1.26.x 的最新 patch） |
-| `gm go install <ver>` | 下载安装 Go SDK（仅限最近两个 stable minor 内的版本，不含 rc/beta） |
+| `gm go install <ver> [ver...]` | 下载安装一个或多个 Go SDK |
 | `gm go use <ver> [--global]` | 同步更新 `.gm-version` 与 `go.mod` 的 `go`/`toolchain` 行 |
-| `gm go uninstall <ver>` | 卸载已安装版本 |
-| `gm add <pkg>` | `go get` 添加依赖 |
-| `gm remove <pkg>` | `go mod edit -droprequire` |
+| `gm go uninstall <ver> [ver...]` | 卸载一个或多个已安装版本 |
+| `gm add <pkg> [pkg...]` | `go get` 添加一个或多个依赖 |
+| `gm remove <pkg> [pkg...]` | `go mod edit -droprequire` 移除多个依赖 |
 | `gm sync [--check]` | `go mod tidy` + `go mod download` |
-| `gm tool list/install/uninstall` | 管理 `~/go/bin`（或 `GOBIN`/`GOPATH/bin`）下的工具 |
+| `gm tool install/uninstall <name> [names...]` | 安装/卸载一个或多个全局工具（`~/go/bin`） |
+| `gm tool list` | 列出 `~/go/bin` 中的工具及编译所用 Go 版本 |
 
 ## 配置与目录
 

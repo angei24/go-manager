@@ -8,8 +8,11 @@ import (
 	"github.com/angei24/go-manager/internal/runtime"
 )
 
-// Add runs go get for a package.
-func Add(pkg string, upgrade, verbose bool) error {
+// Add runs go get for one or more packages.
+func Add(pkgs []string, upgrade, verbose bool) error {
+	if len(pkgs) == 0 {
+		return fmt.Errorf("no packages specified")
+	}
 	dir, err := os.Getwd()
 	if err != nil {
 		return err
@@ -25,7 +28,7 @@ func Add(pkg string, upgrade, verbose bool) error {
 	if upgrade {
 		args = append(args, "-u")
 	}
-	args = append(args, pkg)
+	args = append(args, pkgs...)
 	if verbose {
 		fmt.Printf("go %v\n", args)
 	}
@@ -40,8 +43,11 @@ func Add(pkg string, upgrade, verbose bool) error {
 	return nil
 }
 
-// Remove drops a module requirement via go mod edit.
-func Remove(pkg string, verbose bool) error {
+// Remove drops one or more module requirements via go mod edit.
+func Remove(pkgs []string, verbose bool) error {
+	if len(pkgs) == 0 {
+		return fmt.Errorf("no packages specified")
+	}
 	dir, err := os.Getwd()
 	if err != nil {
 		return err
@@ -49,12 +55,14 @@ func Remove(pkg string, verbose bool) error {
 	if err := requireGoMod(dir); err != nil {
 		return err
 	}
-	modPath := modulePathFromPkg(pkg)
 	ver, err := runtime.ResolveVersion(dir)
 	if err != nil {
 		return err
 	}
-	args := []string{"mod", "edit", "-droprequire=" + modPath}
+	args := []string{"mod", "edit"}
+	for _, pkg := range pkgs {
+		args = append(args, "-droprequire="+modulePathFromPkg(pkg))
+	}
 	if verbose {
 		fmt.Printf("go %v\n", args)
 	}

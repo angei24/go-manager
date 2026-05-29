@@ -8,20 +8,20 @@ import (
 var addUpgrade bool
 
 var addCmd = &cobra.Command{
-	Use:   "add <package>[@version]",
-	Short: "Add a module dependency",
-	Args:  cobra.ExactArgs(1),
+	Use:   "add <package>[@version] [packages...]",
+	Short: "Add one or more module dependencies",
+	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return exitErr(gmmod.Add(args[0], addUpgrade, verbose))
+		return exitErr(gmmod.Add(args, addUpgrade, verbose))
 	},
 }
 
 var removeCmd = &cobra.Command{
-	Use:   "remove <package>",
-	Short: "Remove a module dependency",
-	Args:  cobra.ExactArgs(1),
+	Use:   "remove <package> [packages...]",
+	Short: "Remove one or more module dependencies",
+	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return exitErr(gmmod.Remove(args[0], verbose))
+		return exitErr(gmmod.Remove(args, verbose))
 	},
 }
 

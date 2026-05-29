@@ -24,11 +24,16 @@ var goListCmd = &cobra.Command{
 }
 
 var goInstallCmd = &cobra.Command{
-	Use:   "install <version>",
-	Short: "Download and install a Go version",
-	Args:  cobra.ExactArgs(1),
+	Use:   "install <version> [versions...]",
+	Short: "Download and install one or more Go versions",
+	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return exitErr(gover.Install(args[0], verbose))
+		for _, v := range args {
+			if err := gover.Install(v, verbose); err != nil {
+				return exitErr(fmt.Errorf("%s: %w", v, err))
+			}
+		}
+		return nil
 	},
 }
 
@@ -63,11 +68,16 @@ var goUseCmd = &cobra.Command{
 }
 
 var goUninstallCmd = &cobra.Command{
-	Use:   "uninstall <version>",
-	Short: "Remove an installed Go version",
-	Args:  cobra.ExactArgs(1),
+	Use:   "uninstall <version> [versions...]",
+	Short: "Remove one or more installed Go versions",
+	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return exitErr(gover.Uninstall(args[0]))
+		for _, v := range args {
+			if err := gover.Uninstall(v); err != nil {
+				return exitErr(fmt.Errorf("%s: %w", v, err))
+			}
+		}
+		return nil
 	},
 }
 
